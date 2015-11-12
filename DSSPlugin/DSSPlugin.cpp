@@ -13,7 +13,8 @@
 #include "BusElement.h"
 #include "NodeConnector.h"
 
-#define WORKSPACE "C:/Users/TsunYin/Dropbox/Nurhachi/Engineering/opendss/8500-node"
+//#define WORKSPACE "C:/Users/TsunYin/Dropbox/Nurhachi/Engineering/opendss/8500-node"
+#define WORKSPACE "E:/Dropbox/Nurhachi/Engineering/opendss/8500-node"
 
 #define NODES_FILE "IEEE8500_EXP_NodeNames.CSV"
 #define NODE_ORDER "IEEE8500_EXP_NodeOrder.CSV"
@@ -85,8 +86,6 @@ std::vector<NodeConnector*> parse_node_order(std::string filename, std::map<std:
 			if (!std::regex_search(lsplit[0], match, regex_name)) {
 				continue;
 			}
-
-			
 
 			std::string fullname = match[1];
 			int n_conn = (lsplit.size() - 3) / 2;

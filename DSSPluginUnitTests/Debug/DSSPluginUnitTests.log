@@ -1,0 +1,11 @@
+﻿Build started 2015-11-11 8:22:12 PM.
+     1>Project "E:\DSSPlugin\DSSPluginUnitTests\DSSPluginUnitTests.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         E:\Program Files\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"E:\Program Files\Microsoft Visual Studio 14.0\VC\UnitTest\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\DSSPluginUnitTests.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /FC /errorReport:prompt TestStringUtils.cpp
+         TestStringUtils.cpp
+     1>e:\dssplugin\dsspluginunittests\teststringutils.cpp(17): error C2660: 'DSSPluginUnitTests::TestStringUtils::lower_case': function does not take 1 arguments
+     1>Done Building Project "E:\DSSPlugin\DSSPluginUnitTests\DSSPluginUnitTests.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.60
