@@ -13,8 +13,8 @@
 #include "BusElement.h"
 #include "NodeConnector.h"
 
-//#define WORKSPACE "C:/Users/TsunYin/Dropbox/Nurhachi/Engineering/opendss/8500-node"
-#define WORKSPACE "E:/Dropbox/Nurhachi/Engineering/opendss/8500-node"
+#define WORKSPACE "C:/Users/TsunYin/Dropbox/Nurhachi/Engineering/opendss/8500-node"
+//#define WORKSPACE "E:/Dropbox/Nurhachi/Engineering/opendss/8500-node"
 
 #define NODES_FILE "IEEE8500_EXP_NodeNames.CSV"
 #define NODE_ORDER "IEEE8500_EXP_NodeOrder.CSV"
@@ -107,13 +107,15 @@ std::vector<NodeConnector*> parse_node_order(std::string filename, std::map<std:
 int main() {
 	SetCurrentDirectory(_T(WORKSPACE));
 
-	std::cout << "Reading " << NODES_FILE << "..." << std::endl;
+	std::cout << "Reading " << NODES_FILE << "... ";
 	std::map<std::string, BusNode*> nodes;
-	//nodes = get_nodes(NODES_FILE);
+	nodes = get_nodes(NODES_FILE);
+	std::cout << std::to_string(nodes.size()) << " found." << std::endl;
 
-	std::cout << "Reading " << ELEMENTS_FILE << "..." << std::endl;
+	std::cout << "Reading " << ELEMENTS_FILE << "... ";
 	std::map<std::string, BusElement*> elements;
 	elements = get_elements(ELEMENTS_FILE);
+	std::cout << std::to_string(elements.size()) << " found." << std::endl;
 
 	std::cout << "Reading " << NODE_ORDER << "..." << std::endl;
 	std::vector<NodeConnector*> edges = parse_node_order(NODE_ORDER, nodes, elements);

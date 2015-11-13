@@ -9,9 +9,9 @@ namespace DSSPluginUnitTests
 {
 	TEST_CLASS(TestStringUtils)
 	{
-	public:
+	public:	
 		
-		TEST_METHOD(lower_case)
+		TEST_METHOD(test_lower_case)
 		{
 			std::string before = "AbCdEfG";
 			std::string after = lower_case(before);
