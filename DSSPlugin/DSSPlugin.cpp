@@ -12,13 +12,23 @@
 #include "BusNode.h"
 #include "BusElement.h"
 #include "NodeConnector.h"
+#include "DistributionSystemGraph.h"
 
-#define WORKSPACE "C:/Users/TsunYin/Dropbox/Nurhachi/Engineering/opendss/8500-node"
-//#define WORKSPACE "E:/Dropbox/Nurhachi/Engineering/opendss/8500-node"
+//#define WORKSPACE "C:/Users/TsunYin/Dropbox/Nurhachi/Engineering/opendss/8500-node"
+#define WORKSPACE "E:/Dropbox/Nurhachi/Engineering/opendss/8500-node"
 
 #define NODES_FILE "IEEE8500_EXP_NodeNames.CSV"
 #define NODE_ORDER "IEEE8500_EXP_NodeOrder.CSV"
 #define ELEMENTS_FILE "IEEE8500_Elements.Txt"
+
+struct Element {
+	std::string fullname;
+	std::string name;
+	std::string type;
+	std::string bus1;
+	std::string bus2;
+	std::string bus3;
+};
 
 std::map<std::string, BusNode*> get_nodes(std::string filename) {
 	std::map<std::string, BusNode*> nodes;
@@ -42,8 +52,8 @@ std::map<std::string, BusNode*> get_nodes(std::string filename) {
 	return nodes;
 }
 
-std::map<std::string, BusElement*> get_elements(std::string filename) {
-	std::map<std::string, BusElement*> elements;
+std::map<std::string, Element> get_elements(std::string filename) {
+	std::map<std::string, Element> elements;
 	std::regex regex_1bus("\"(\\S+)\\.(\\S+)\"\\s+(\\S+)\\s*$");
 	std::regex regex_2bus("\"(\\S+)\\.(\\S+)\"\\s+(\\S+)\\s+(\\S+)\\s*$");
 	std::regex regex_3bus("\"(\\S+)\\.(\\S+)\"\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s*$");
@@ -53,18 +63,30 @@ std::map<std::string, BusElement*> get_elements(std::string filename) {
 	if (fs.is_open()) {
 		std::string line;
 		while (std::getline(fs, line)) {
-			BusElement* e;
+			Element e;
 			if (std::regex_search(line, match, regex_1bus)) {
-				e = new BusElement(match[1], match[2], match[3]);
-				elements[e->full_name()] = e;
+				e.type = match[1];
+				e.name = match[2];
+				e.fullname = lower_case(e.type + '.' + e.name);
+				e.bus1 = match[3];
+				elements[e.fullname] = e;
 			}
 			else if (std::regex_search(line, match, regex_2bus)) {
-				e = new BusElement(match[1], match[2], match[3], match[4]);
-				elements[e->full_name()] = e;
+				e.type = match[1];
+				e.name = match[2];
+				e.fullname = lower_case(e.type + '.' + e.name);
+				e.bus1 = match[3];
+				e.bus2 = match[4];
+				elements[e.fullname] = e;
 			}
 			else if (std::regex_search(line, match, regex_3bus)) {
-				e = new BusElement(match[1], match[2], match[3], match[4], match[5]);
-				elements[e->full_name()] = e;
+				e.type = match[1];
+				e.name = match[2];
+				e.fullname = lower_case(e.type + '.' + e.name);
+				e.bus1 = match[3];
+				e.bus2 = match[4];
+				e.bus3 = match[5];
+				elements[e.fullname] = e;
 			}
 		}
 	}
@@ -73,7 +95,7 @@ std::map<std::string, BusElement*> get_elements(std::string filename) {
 	return elements;
 }
 
-std::vector<NodeConnector*> parse_node_order(std::string filename, std::map<std::string, BusNode*> nodes, std::map<std::string, BusElement*> elements) {
+std::vector<NodeConnector*> parse_node_order(std::string filename, std::map<std::string, Element> elements) {
 	std::vector<NodeConnector*> edges;
 	std::regex regex_name("\"(\\S+\\.\\S+)\"");
 	std::smatch match;
@@ -86,17 +108,18 @@ std::vector<NodeConnector*> parse_node_order(std::string filename, std::map<std:
 			if (!std::regex_search(lsplit[0], match, regex_name)) {
 				continue;
 			}
+			std::string fullname = lower_case(match[1]);
+			//std::cout << fullname << std::endl;
 
-			std::string fullname = match[1];
 			int n_conn = (lsplit.size() - 3) / 2;
 			if (elements.find(fullname) != elements.end()) {
-				std::cout << elements[fullname]->full_name() << std::endl;
+				std::cout << fullname << '-' << n_conn << std::endl;
 			}
 
-			for (int i = 0; i < n_conn; i++) {
-				BusNode* node1;
-				BusNode* node2;
-			}
+			//for (int i = 0; i < n_conn; i++) {
+//				BusNode* node1;
+				//BusNode* node2;
+			//}
 		}
 	}
 	fs.close();
@@ -107,18 +130,20 @@ std::vector<NodeConnector*> parse_node_order(std::string filename, std::map<std:
 int main() {
 	SetCurrentDirectory(_T(WORKSPACE));
 
+	/*
 	std::cout << "Reading " << NODES_FILE << "... ";
 	std::map<std::string, BusNode*> nodes;
 	nodes = get_nodes(NODES_FILE);
 	std::cout << std::to_string(nodes.size()) << " found." << std::endl;
+	*/
 
 	std::cout << "Reading " << ELEMENTS_FILE << "... ";
-	std::map<std::string, BusElement*> elements;
+	std::map<std::string, Element> elements;
 	elements = get_elements(ELEMENTS_FILE);
 	std::cout << std::to_string(elements.size()) << " found." << std::endl;
 
 	std::cout << "Reading " << NODE_ORDER << "..." << std::endl;
-	std::vector<NodeConnector*> edges = parse_node_order(NODE_ORDER, nodes, elements);
+	std::vector<NodeConnector*> edges = parse_node_order(NODE_ORDER, elements);
 
 	return 0;
 }

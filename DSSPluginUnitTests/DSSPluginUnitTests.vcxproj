@@ -90,7 +90,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;C:\Program Files\Boost\boost_1_59_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;C:\Program Files\Boost\boost_1_59_0;E:\Program Files\Boost\boost_1_59_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>
@@ -166,6 +166,7 @@
     </ClCompile>
     <ClCompile Include="TestBoostGraphAlgorithms.cpp" />
     <ClCompile Include="TestBoostGraphCreate.cpp" />
+    <ClCompile Include="TestDistributionSystemGraph.cpp" />
     <ClCompile Include="TestStringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
