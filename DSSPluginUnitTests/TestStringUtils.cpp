@@ -19,5 +19,19 @@ namespace DSSPluginUnitTests
 			Assert::IsFalse(before == after);
 			Assert::IsTrue("abcdefg" == after);
 		}
+
+		TEST_METHOD(test_trim)
+		{
+			std::string before = "  asdf  ";
+			std::string after = trim(before);
+			Assert::IsFalse(before == after);
+
+			Assert::IsTrue("as df" == trim("  as df"));
+			Assert::IsTrue("as df" == trim("as df  "));
+			Assert::IsTrue("as df" == trim("  as df  "));
+			Assert::IsTrue("as df" == trim("as df"));
+		}
 	};
+
+
 }

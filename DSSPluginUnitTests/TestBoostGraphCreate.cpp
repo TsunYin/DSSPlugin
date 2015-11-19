@@ -77,33 +77,29 @@ namespace DSSPluginUnitTests
 			using namespace boost;
 
 			// Define custom properties
-			struct max_t { typedef edge_property_tag kind; };
-			struct name_t { typedef vertex_property_tag kind; };
-			struct age_t { typedef vertex_property_tag kind; };
-			typedef property<max_t, int> MaxProperty;
-			typedef property<name_t, std::string> NameProperty;
-			typedef property<age_t, int, NameProperty> AgeProperty;
+			struct CustomVertex {
+				std::string name;
+				int age;
+			};
 
-			typedef adjacency_list<vecS, vecS, bidirectionalS, AgeProperty, MaxProperty> Graph;
+			typedef adjacency_list<vecS, vecS, bidirectionalS, CustomVertex> Graph;
 			typedef std::pair<int, int> Edge;
 			Edge edge_array[] = { Edge(0,1), Edge(0,3), Edge(2,0), Edge(3,2), Edge(2,5), Edge(1,3), Edge(5,4) };
 			Graph g(edge_array, edge_array + sizeof(edge_array) / sizeof(Edge), 6);
 
-			property_map<Graph, name_t>::type name = get(name_t(), g);
-			name[0] = "Reimu";
-			name[1] = "Marisa";
-			name[2] = "Youmu";
-			name[3] = "Sakuya";
-			name[4] = "Sanae";
-			name[5] = "Reisen";
-
-			property_map<Graph, age_t>::type age = get(age_t(), g);
-			age[0] = 17;
-			age[1] = 19;
-			age[2] = 22;
-			age[3] = 21;
-			age[4] = 20;
-			age[5] = 25;
+			auto v = get(vertex_bundle, g);
+			v[0].name = "Reimu";
+			v[1].name = "Marisa";
+			v[2].name = "Youmu";
+			v[3].name = "Sakuya";
+			v[4].name = "Sanae";
+			v[5].name = "Reisen";
+			v[0].age = 17;
+			v[1].age = 19;
+			v[2].age = 22;
+			v[3].age = 21;
+			v[4].age = 20;
+			v[5].age = 25;
 
 			Assert::AreEqual(num_vertices(g), size_t(6));
 
@@ -111,54 +107,11 @@ namespace DSSPluginUnitTests
 			std::string expected_name[] = { "Reimu", "Marisa", "Youmu", "Sakuya", "Sanae", "Reisen" };
 			int expected_age[] = { 17, 19, 22, 21, 20, 25 };
 
-			typedef graph_traits<Graph>::vertex_descriptor Vertex;
-			typedef graph_traits<Graph>::vertex_iterator vertex_iter;
-			std::pair<vertex_iter, vertex_iter> vp;
-			for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
-				Vertex v = *vp.first;
-				Assert::AreEqual(name[v], expected_name[i]);
-				Assert::AreEqual(age[v], expected_age[i]);
-				i++;
-			}
-		}
-
-		TEST_METHOD(test_adjacency_list_add_vertex) {
-			using namespace boost;
-
-			// Define custom properties
-			struct max_t { typedef edge_property_tag kind; };
-			struct name_t { typedef vertex_property_tag kind; };
-			struct age_t { typedef vertex_property_tag kind; };
-			typedef property<max_t, int> MaxProperty;
-			typedef property<name_t, std::string> NameProperty;
-			typedef property<age_t, int, NameProperty> AgeProperty;
-
-			typedef adjacency_list<vecS, vecS, bidirectionalS, AgeProperty, MaxProperty> Graph;
-			Graph g(0);
-
-			add_vertex(AgeProperty(17, NameProperty("Reimu")), g);
-			add_vertex(AgeProperty(19, NameProperty("Marisa")), g);
-			add_vertex(AgeProperty(22, NameProperty("Youmu")), g);
-			add_vertex(AgeProperty(21, NameProperty("Sakuya")), g);
-			add_vertex(AgeProperty(20, NameProperty("Sanae")), g);
-			add_vertex(AgeProperty(25, NameProperty("Reisen")), g);
-
-			property_map<Graph, name_t>::type name = get(name_t(), g);
-			property_map<Graph, age_t>::type age = get(age_t(), g);
-
-			Assert::AreEqual(num_vertices(g), size_t(6));
-
-			int i = 0;
-			std::string expected_name[] = { "Reimu", "Marisa", "Youmu", "Sakuya", "Sanae", "Reisen" };
-			int expected_age[] = { 17, 19, 22, 21, 20, 25 };
-
-			typedef graph_traits<Graph>::vertex_descriptor Vertex;
-			typedef graph_traits<Graph>::vertex_iterator vertex_iter;
-			std::pair<vertex_iter, vertex_iter> vp;
-			for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
-				Vertex v = *vp.first;
-				Assert::AreEqual(name[v], expected_name[i]);
-				Assert::AreEqual(age[v], expected_age[i]);
+			auto name = get(&CustomVertex::name, g);
+			auto age = get(&CustomVertex::age, g);
+			for (int i = 0; i < 5; i++) {
+				Assert::AreEqual(name[i], expected_name[i]);
+				Assert::AreEqual(age[i], expected_age[i]);
 				i++;
 			}
 		}
